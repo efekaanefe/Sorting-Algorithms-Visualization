@@ -4,8 +4,8 @@ from random import shuffle
 pygame.init()
 
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 1000
+HEIGHT = 800
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sorting Algorithms Visualization")
 
@@ -15,10 +15,11 @@ DEFAULT_REC_COL = (192, 192, 192)
 
 
 def main():
-    # arr = shuffle(list(range(0, 100)))
-    arr = [22, 2, 5, 51, 15, 65, 40, 22, 31, 41, 90, 70, 40, 30]
-    rec_width = WIDTH / len(arr)
-    rec_length_multiplier = HEIGHT / max(arr)
+    # arr = shuffle(list(range(100)))
+    arr = [22, 2, 5, 51, 15, 65, 40, 22, 31, 41, 90, 70, 40, 30, 7, 9, 11]
+    rec_width = WIDTH // len(arr)
+    rec_length_multiplier = (HEIGHT - 50) / max(arr)
+    offset = (WIDTH - len(arr) * rec_width) / 2
 
     clock = pygame.time.Clock()
     running = True
@@ -31,7 +32,7 @@ def main():
 
         for x, y in enumerate(arr):
             rect = pygame.Rect(
-                x * rec_width,
+                x * rec_width + offset,
                 HEIGHT - y * rec_length_multiplier,
                 rec_width - 2,
                 y * rec_length_multiplier,
@@ -39,7 +40,7 @@ def main():
             pygame.draw.rect(SCREEN, DEFAULT_REC_COL, rect)
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(75)
     pygame.quit()
     quit()
 
