@@ -1,6 +1,6 @@
 import pygame
 from random import shuffle
-from selection_sort import selection_sort
+from sorting_algorithms import selection_sort
 
 pygame.init()
 
