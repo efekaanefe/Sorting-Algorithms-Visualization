@@ -18,8 +18,7 @@ GREEN = (0, 196, 0)
 
 
 def main():
-    # todo make selection sort understand it finished
-    # todo make bubble sort understand it finished
+    # todo improve stopping sorting solution
     sort_algorithms = ["selection_sort", "bubble_sort"]
     curr_algo = sort_algorithms[1]
 
