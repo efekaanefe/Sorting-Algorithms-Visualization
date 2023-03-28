@@ -48,6 +48,9 @@ def main():
 
         different_color_indices = []
 
+        if sorting_finished(arr):
+            is_sorting = False
+
         if is_sorting:
             if curr_algo == sort_algorithms[0]:
                 if start_index < len(arr):
@@ -88,6 +91,10 @@ def main():
         clock.tick(FPS)
     pygame.quit()
     quit()
+
+
+def sorting_finished(arr):
+    return sorted(arr) == arr
 
 
 if __name__ == "__main__":
