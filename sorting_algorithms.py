@@ -9,7 +9,6 @@ def selection_sort(arr, start_index):
         arr[start_index],
     )
     return {
-        "isChanged": True,
         "arr": arr,
         "smallest_index": smallest_index,
         "bigger_index": bigger_index,
