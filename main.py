@@ -1,6 +1,6 @@
 import pygame
 import random
-from sorting_algorithms import selection_sort
+from sorting_algorithms import selection_sort, bubble_sort
 
 pygame.init()
 
@@ -18,12 +18,12 @@ GREEN = (0, 196, 0)
 
 
 def main():
-    # arr = shuffle(list(range(100)))
-    # todo imply bubble sort
+    # todo make selection sort understand it finished
+    # todo make bubble sort understand it finished
     sort_algorithms = ["selection_sort", "bubble_sort"]
-    curr_algo = sort_algorithms[0]
+    curr_algo = sort_algorithms[1]
 
-    arr = [random.randint(1, 100) for _ in range(100)]
+    arr = [random.randint(1, 100) for _ in range(50)]
     # arr = [22, 2, 5, 51, 15, 65, 40, 29, 22, 31, 41, 90, 70, 40, 30, 7, 9, 11]
 
     rec_width = WIDTH // len(arr)
@@ -36,6 +36,9 @@ def main():
 
     if curr_algo == sort_algorithms[0]:
         start_index = 0
+    elif curr_algo == sort_algorithms[1]:
+        i = 0
+        change_happened = True
 
     while running:
         SCREEN.fill(BG_COL)
@@ -58,7 +61,18 @@ def main():
                     #     start_index += 1
                     start_index += 1
             if curr_algo == sort_algorithms[1]:
-                pass
+                if change_happened:
+                    output = bubble_sort(arr, i)
+                    arr = output["arr"]
+                    different_color_indices.append(output["first_index"])
+                    different_color_indices.append(output["second_index"])
+                    change_happened = output["change_happened"]
+                    i += 1
+                else:
+                    i = 0
+                    change_happened = True
+                # print(i)
+        print("Sorting: ", is_sorting, random.randint(0, 100))
 
         for x, y in enumerate(arr):
             rect = pygame.Rect(
