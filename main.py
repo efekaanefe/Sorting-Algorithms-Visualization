@@ -22,7 +22,7 @@ def main():
     sort_algorithms = ["selection_sort", "bubble_sort"]
     curr_algo = sort_algorithms[1]
 
-    arr = [random.randint(1, 100) for _ in range(50)]
+    arr = [random.randint(1, 100) for _ in range(200)]
     # arr = [22, 2, 5, 51, 15, 65, 40, 29, 22, 31, 41, 90, 70, 40, 30, 7, 9, 11]
 
     rec_width = WIDTH // len(arr)
