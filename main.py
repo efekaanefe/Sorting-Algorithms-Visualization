@@ -22,7 +22,7 @@ def main():
     sort_algorithms = ["selection_sort", "bubble_sort"]
     curr_algo = sort_algorithms[1]
 
-    arr = [random.randint(1, 100) for _ in range(200)]
+    arr = [random.randint(1, 100) for _ in range(50)]
     # arr = [22, 2, 5, 51, 15, 65, 40, 29, 22, 31, 41, 90, 70, 40, 30, 7, 9, 11]
 
     rec_width = WIDTH // len(arr)
@@ -38,7 +38,6 @@ def main():
     elif curr_algo == sort_algorithms[1]:
         i = 0
         change_happened = True
-
     while running:
         SCREEN.fill(BG_COL)
         for event in pygame.event.get():
@@ -62,6 +61,7 @@ def main():
                     # else:
                     #     start_index += 1
                     start_index += 1
+
             if curr_algo == sort_algorithms[1]:
                 if change_happened:
                     output = bubble_sort(arr, i)
@@ -73,7 +73,10 @@ def main():
                 else:
                     i = 0
                     change_happened = True
-                # print(i)
+                    
+            if curr_algo == sort_algorithms[2]:
+                continue
+
         print("Sorting: ", is_sorting, random.randint(0, 100))
 
         for x, y in enumerate(arr):
