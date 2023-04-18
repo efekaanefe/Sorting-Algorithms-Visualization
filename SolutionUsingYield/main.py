@@ -17,11 +17,22 @@ RED = (196, 0, 0)
 GREEN = (0, 196, 0)
 
 
-def main():
-    sort_algorithms = ["selection_sort", "bubble_sort"]
-    curr_algo = sort_algorithms[1]
+class DrawInfo:
+    def __init__(
+        self, rec_width, rec_length_multiplier, offset, different_color_indices=[]
+    ):
+        self.rec_width = rec_width
+        self.rec_length_multiplier = rec_length_multiplier
+        self.offset = offset
+        self.different_color_indices = different_color_indices
 
-    arr = [random.randint(1, 100) for _ in range(20)]
+
+def main():
+    i = 1
+    sort_algorithms = [selection_sort, bubble_sort, merge_sort]
+    curr_algo = sort_algorithms[i]
+
+    arr = [random.randint(1, 100) for _ in range(50)]
 
     rec_width = WIDTH // len(arr)
     rec_length_multiplier = (HEIGHT - 50) / max(arr)
@@ -30,9 +41,8 @@ def main():
     clock = pygame.time.Clock()
     running = True
     is_sorting = True
-
-    sorting_algorithm_generator = bubble_sort(
-        arr, rec_width, rec_length_multiplier, offset
+    sorting_algorithm_generator = curr_algo(
+        arr, DrawInfo(rec_width, rec_length_multiplier, offset)
     )
     while running:
         SCREEN.fill(BG_COL)
@@ -43,23 +53,22 @@ def main():
         different_color_indices = []
 
         if is_sorting:
-            if curr_algo == sort_algorithms[0]:
-                output = selection_sort(arr)
+            try:
+                next(sorting_algorithm_generator)
+            except StopIteration:
+                is_sorting = False
 
-            if curr_algo == sort_algorithms[1]:
-                try:
-                    next(sorting_algorithm_generator)
-                except StopIteration:
-                    is_sorting = False
-
-            # draw_arr(arr, rec_width, rec_length_multiplier, offset)
-            pygame.display.update()
-            clock.tick(FPS)
+        pygame.display.update()
+        clock.tick(FPS)
     pygame.quit()
     quit()
 
 
-def draw_arr(arr, rec_width, rec_length_multiplier, offset):
+def draw_arr(arr, draw_info):
+    rec_width = draw_info.rec_width
+    rec_length_multiplier = draw_info.rec_length_multiplier
+    offset = draw_info.offset
+    different_color_indices = draw_info.different_color_indices
     for x, y in enumerate(arr):
         rect = pygame.Rect(
             x * rec_width + offset,
@@ -67,58 +76,13 @@ def draw_arr(arr, rec_width, rec_length_multiplier, offset):
             rec_width - 2,
             y * rec_length_multiplier,
         )
-        COL = DEFAULT_REC_COL  # if x not in different_color_indices else GREEN
+        COL = DEFAULT_REC_COL if x not in different_color_indices else GREEN
         pygame.draw.rect(SCREEN, COL, rect)
 
     pygame.display.update()
 
 
-def bubble_sort(arr, rec_width, rec_length_multiplier, offset):
-
-    n = len(arr)
-    for i in range(n - 1):
-        for j in range(n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                draw_arr(arr, rec_width, rec_length_multiplier, offset)
-                yield True
-    return arr
-
-
-def merge_sort(arr, l, r):
-    if l < r:
-        mid = (l + r) // 2
-        self.merge_sort(arr, l, mid)
-        self.merge_sort(arr, mid + 1, r)
-        self.merge(arr, l, mid, r)
-
-
-def merge(arr, l, mid, r):
-    n1 = mid - l + 1
-    n2 = r - mid
-    L = [arr[l + i] for i in range(n1)]
-    R = [arr[mid + 1 + j] for j in range(n2)]
-    i = j = 0
-    k = l
-    while i < n1 and j < n2:
-        if L[i] < R[j]:
-            arr[k] = L[i]
-            i += 1
-        else:
-            arr[k] = R[j]
-            j += 1
-        k += 1
-    while i < n1:
-        arr[k] = L[i]
-        i += 1
-        k += 1
-    while j < n2:
-        arr[k] = R[j]
-        j += 1
-        k += 1
-
-
-def selection_sort(arr):
+def selection_sort(arr, draw_info):
     n = len(arr)
     for i in range(n - 1):
         min_idx = i
@@ -126,7 +90,64 @@ def selection_sort(arr):
             if arr[j] < arr[min_idx]:
                 min_idx = j
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
-        self.draw(arr)
+        draw_info.different_color_indices = [i, min_idx]
+        draw_arr(arr, draw_info)
+        yield True
+    return arr
+
+
+def bubble_sort(arr, draw_info):
+
+    n = len(arr)
+    for i in range(n - 1):
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                draw_info.different_color_indices = [j, j + 1]
+                draw_arr(arr, draw_info)
+                yield True
+    return arr
+
+
+def merge_sort(arr, draw_info):
+    length = len(arr)
+    if length == 1:
+        return arr
+    else:
+        right_arr = arr[length // 2 :]
+        left_arr = arr[: length // 2]
+
+        # recursion
+        merge_sort(left_arr, draw_info)
+        merge_sort(right_arr, draw_info)
+
+        # merge
+        i = 0  # left_arr idx
+        j = 0  # righ_arr idc
+        k = 0  # 	merged arr idx
+        while i < len(left_arr) and j < len(right_arr):
+            if left_arr[i] <= right_arr[j]:
+                arr[k] = left_arr[i]
+                i += 1
+            else:
+                arr[k] = right_arr[j]
+                j += 1
+            k += 1
+            draw_arr(arr, draw_info)
+            yield True
+        while i < len(left_arr):
+            arr[k] = left_arr[i]
+            i += 1
+            k += 1
+            draw_arr(arr, draw_info)
+            yield True
+        while j < len(right_arr):
+            arr[k] = right_arr[j]
+            j += 1
+            k += 1
+            draw_arr(arr, draw_info)
+            yield True
+    return arr
 
 
 def sorting_finished(arr):
